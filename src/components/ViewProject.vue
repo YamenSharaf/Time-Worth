@@ -33,14 +33,14 @@
                 <div slot="label" class="text-white d-block">
                   Time of working minutes
                 </div>
-                <el-input-number @change="updateHours" v-model="logDayForm.minutesCount" :min="0"></el-input-number>
+                <el-input-number v-model="logDayForm.minutesCount" :min="0"></el-input-number>
               </el-form-item>
               <el-form-item>
                 <div slot="label" class="text-white d-block">
                   Time of working hours
                   <br>
                 </div>
-                <el-input-number @change="updateMinutes" v-model="logDayForm.hoursCount" :min="0" :max="12"></el-input-number>
+                <el-input-number v-model="logDayForm.hoursCount" :min="0" :max="12"></el-input-number>
               </el-form-item>
               <el-form-item>
                 <div slot="label" class="text-white d-block">
@@ -161,6 +161,12 @@ export default {
     projectId () {
       return this.$route.params.id
     },
+    watchHours () {
+      return this.logDayForm.hoursCount
+    },
+    watchMinutes () {
+      return this.logDayForm.minutesCount
+    },
     totalTime () {
       let total = 0
       this.log.map((log) => {
@@ -171,6 +177,14 @@ export default {
     periodTime () {
       let total = 0
       return total
+    }
+  },
+  watch: {
+    watchHours () {
+      this.logDayForm.minutesCount = this.logDayForm.hoursCount * 60
+    },
+    watchMinutes () {
+      this.logDayForm.hoursCount = this.logDayForm.minutesCount / 60
     }
   },
   methods: {
@@ -201,12 +215,6 @@ export default {
       .then(() => {
         this.renderComponent()
       })
-    },
-    updateMinutes () {
-      this.logDayForm.minutesCount = this.logDayForm.hoursCount * 60
-    },
-    updateHours () {
-      this.logDayForm.hoursCount = this.logDayForm.minutesCount / 60
     }
   },
   mounted () {
